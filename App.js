@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import GroceryListItemEditor from './components/GroceryListItemEditor';
 import SwipableListItem from './components/SwipableListItem';
 
 export default function App() {
+  const salesTaxRate = 0.09;
+
   const [groceryListItems, setGroceryListItems] = useState([
     {
       id: 'randomID1',
@@ -38,7 +40,21 @@ export default function App() {
   }
 
   const editItem = null;
+
+  const roundMoney = money => {
+    return (Math.round(money * 100) / 100).toFixed(2);
+  }
+
+  const groceryListItemTotals = groceryListItems.map(item => item.price * item.quantity);
+  let subTotal = groceryListItemTotals.length > 0 
+        ? groceryListItemTotals.reduce((a,b) => a + b) 
+        : 0;
+  const totalTax = subTotal * salesTaxRate;
+  const total = subTotal + totalTax;
+
   
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <GroceryListItemEditor listItem={editItem} onAddToList={handleAddToList}/>
@@ -66,6 +82,23 @@ export default function App() {
             }]}/>
         )} />
 
+      <View style={styles.summaryContainer}>
+        <View style={styles.summaryRow}>
+          <Text style={styles.subTotal}>Sub-total: </Text>
+          <Text style={styles.subTotal}>${roundMoney(subTotal)}</Text>
+        </View>
+
+        <View style={styles.summaryRow}>
+          <Text style={styles.subTotal}>Tax: </Text>
+          <Text style={styles.subTotal}>${roundMoney(totalTax)}</Text>
+        </View>
+
+        <View style={styles.summaryRow}>
+          <Text style={styles.total}>Total: </Text>
+          <Text style={styles.total}>${roundMoney(total)}</Text>
+        </View>  
+      </View>          
+
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -77,11 +110,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 25
+    paddingTop: 25
   },
   groceryList: {
     flex: 1,
-    //width: '80%'
+    paddingBottom: 50
   },
   groceryListItem: {
     borderColor: 'gray',
@@ -92,4 +125,23 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5
   },
+  summaryContainer: {
+    padding: 20,
+    width: '100%',
+    backgroundColor: '#3B0B0B'
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    color: '#fff'
+  },
+  subTotal: {
+    fontSize: 20,
+    color: '#fff'
+  },
+  total: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff'
+  }
 });
