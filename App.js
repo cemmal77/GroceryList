@@ -1,53 +1,56 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import GroceryListItemEditor from './components/GroceryListItemEditor';
+import GroceryItemAdd from "./components/GroceryItemAdd";
+import GroceryItemEdit from './components/GroceryItemEdit';
 import SwipableListItem from './components/SwipableListItem';
 
 export default function App() {
   const salesTaxRate = 0.09;
 
-  const [groceryListItems, setGroceryListItems] = useState([
-    {
-      id: 'randomID1',
-      name: 'Bananas',
-      price: 2.99,
-      quantity: 1
-    },
-    {
-      id: 'randomID2',
-      name: 'Oranges',
-      price: 0.99,
-      quantity: 1
-    },
-    {
-      id: 'randomID3',
-      name: 'Ground Beef',
-      price: 5.99,
-      quantity: 1
-    }
-  ]);
+  const [groceryListItems, setGroceryListItems] = useState([]);
 
   const [isAddMode, setIsAddMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [focusedGroceryItem, setFocusedGroceryItem] = useState(null);
 
-  const handleAddToList = (groceryListItem) => {
-    const nextId = 'listItem' + groceryListItem.name + Math.random().toString();
-    groceryListItem.id = nextId.toString();
-    setGroceryListItems([...groceryListItems, groceryListItem]);
+  const handleEditItemPress = (groceryItem) => {
+    setFocusedGroceryItem(groceryItem);
+    setIsEditMode(true);
+  }
+
+  const handleAddSubmit = (groceryItem) => {
+    const nextId = 'listItem' + groceryItem.name + Math.random().toString();
+    groceryItem.id = nextId.toString();
+    setGroceryListItems([...groceryListItems, groceryItem]);
     setIsAddMode(false);
   }
 
-  const handleDeleteFromList = (groceryListItem) => {
-    const newGroceryList = groceryListItems.filter(k => groceryListItem.id !== k.id);
-    setGroceryListItems(newGroceryList);
+  const handleEditSubmit = (groceryItem) => {
+    console.log(groceryItem);
+    const index = groceryListItems.map(k => k.id).indexOf(groceryItem.id);
+    const newList = [...groceryListItems];
+    newList[index] = groceryItem;
+    setGroceryListItems(newList);
+    setIsEditMode(false);
+    setFocusedGroceryItem(null);
   }
 
-  const editItem = null;
+  const handleCancel = () => {
+    setIsAddMode(false);
+    setIsEditMode(false);
+    setFocusedGroceryItem(null);
+  }
+
+  const handleDeleteFromList = (groceryItem) => {
+    const newGroceryList = groceryListItems.filter(k => groceryItem.id !== k.id);
+    setGroceryListItems(newGroceryList);
+  }
 
   const roundMoney = money => {
     return (Math.round(money * 100) / 100).toFixed(2);
   }
-
+  
   const groceryListItemTotals = groceryListItems.map(item => item.price * item.quantity);
   let subTotal = groceryListItemTotals.length > 0 
         ? groceryListItemTotals.reduce((a,b) => a + b) 
@@ -55,14 +58,21 @@ export default function App() {
   const totalTax = subTotal * salesTaxRate;
   const total = subTotal + totalTax;
 
-  
-  
 
   return (
     <SafeAreaView style={styles.container}>
-      <GroceryListItemEditor visible={isAddMode} onCancel={() => setIsAddMode(false)} listItem={editItem} onAddToList={handleAddToList}/>
+      <GroceryItemAdd 
+        visible={isAddMode}
+        onCancel={handleCancel}
+        onSubmit={handleAddSubmit} />
 
-      <TouchableOpacity activeOpacity={0.9} style={{...styles.button, backgroundColor: '#0B3861'}} onPress={() => setIsAddMode(true)}>
+      {focusedGroceryItem && <GroceryItemEdit 
+        visible={isEditMode}
+        groceryItem={focusedGroceryItem}
+        onCancel={handleCancel}
+        onSubmit={handleEditSubmit} />}
+
+      <TouchableOpacity activeOpacity={0.9} style={{...styles.button, backgroundColor: '#3B0B0B'}} onPress={() => setIsAddMode(true)}>
         <Text style={{...styles.buttonText, color: '#fff'}}>Add new item</Text>
       </TouchableOpacity>
 
@@ -74,7 +84,7 @@ export default function App() {
             actions={[{
                 id: item.id + 'editAction',
                 name: 'Edit',
-                action: (item) => console.log('Edit: ', item),
+                action: () => handleEditItemPress(item),
                 style: {
                     backgroundColor: '#0B2161'
                 },

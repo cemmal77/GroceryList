@@ -43,7 +43,7 @@ const SwipableListItem = props => {
 
     //Default handler for button press.
     const handleButtonPress = (item) => {
-        //pan.x.setValue(0);
+        pan.x.setValue(0);
         item.action();
     };
 

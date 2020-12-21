@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Keyboard, Text, StyleSheet, TextInput, View, Modal, TouchableOpacity } from 'react-native';
 
-const GroceryListItemEditor = props => {
-    const [groceryListItemName, setGroceryListItemName] = useState((props.listItem && props.listItem.name) || '');
-    const [groceryListItemPrice, setGroceryListItemPrice] = useState((props.listItem && props.listItem.price) || null);
-    const [groceryListItemQuantity, setGroceryListItemQuantity] = useState((props.listItem && props.listItem.quantity) || null);
+const GoceryItemAdd = props => {
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState(null);
+    const [quantity, setQuantity] = useState(null);
 
     const handleCancelPress = () => {
         props.onCancel();
     }
 
-    const handleAddPress = () => {
-        if(groceryListItemName !== '' && groceryListItemPrice > 0 && groceryListItemQuantity > 0){
-            props.onAddToList({
+    const handleSubmitPress = () => {
+        if(name !== '' && price > 0 && quantity > 0){
+            props.onSubmit({
                 id: null,
-                name: groceryListItemName,
-                price: groceryListItemPrice,
-                quantity: groceryListItemQuantity
+                name: name,
+                price: price,
+                quantity: quantity
             })
 
-            setGroceryListItemName('');
-            setGroceryListItemPrice(null),
-            setGroceryListItemQuantity(null);
+            setName('');
+            setPrice(null),
+            setQuantity(null);
 
             Keyboard.dismiss();
         }
@@ -32,27 +32,25 @@ const GroceryListItemEditor = props => {
             <View style={styles.container}>
                 <TextInput 
                 style={styles.textInput} 
-                value={groceryListItemName} 
+                value={name} 
                 placeholder="Item Name"
-                onChangeText={(text) => setGroceryListItemName(text)} />
+                onChangeText={(text) => setName(text)} />
 
                 <TextInput 
                 style={styles.textInput} 
-                value={groceryListItemPrice && groceryListItemPrice.toString()} 
+                value={price && price.toString()} 
                 placeholder="Item Price"
                 keyboardType={'decimal-pad'}
-                onChangeText={(text) => setGroceryListItemPrice(text)} />
+                onChangeText={(text) => setPrice(text)} />
 
                 <TextInput 
                 style={styles.textInput} 
-                value={groceryListItemQuantity && groceryListItemQuantity.toString()} 
+                value={quantity && quantity.toString()} 
                 placeholder="Quantity"
                 keyboardType={'numeric'}
-                onChangeText={(text) => setGroceryListItemQuantity(text)} />
+                onChangeText={(text) => setQuantity(text)} />
 
-                
-
-                <TouchableOpacity activeOpacity={0.9} style={{...styles.button, backgroundColor: '#0B3861'}} onPress={handleAddPress}>
+                <TouchableOpacity activeOpacity={0.9} style={{...styles.button, backgroundColor: '#3B0B0B'}} onPress={handleSubmitPress}>
                     <Text style={{...styles.buttonText, color: '#fff'}}>Add to list</Text>
                 </TouchableOpacity>
 
@@ -67,7 +65,8 @@ const GroceryListItemEditor = props => {
 const styles = StyleSheet.create({
     container: {
         width: '90%',
-        padding: 15,
+        paddingHorizontal: 10,
+        paddingVertical: 25,
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        marginVertical: 10,
+        marginVertical: 5,
         borderWidth: 1,
         borderRadius: 5,
         shadowColor: '#1C1C1C',
@@ -100,4 +99,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default GroceryListItemEditor;
+export default GoceryItemAdd;
