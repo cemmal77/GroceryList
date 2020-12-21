@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Button, PanResponder, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, PanResponder, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const SwipableListItem = props => {
     //Reference item to store the most current animation state
@@ -56,11 +56,9 @@ const SwipableListItem = props => {
 
     return (
       <View style={styles.container}>
-          <Animated.View {...panResponder.panHandlers} style={[pan.getLayout(), styles.labelContainer]}>
-              
-                  <Text style={styles.label}>{props.labelText}</Text>
-                  {props.labelSubText && <Text style={styles.label}>{props.labelSubText}</Text>}
-              
+          <Animated.View {...panResponder.panHandlers} style={[pan.getLayout(), styles.labelContainer, props.labelContainerStyle]}>
+            <Text style={{...styles.label, ...props.labelTextStyle}}>{props.labelText}</Text>
+            {props.labelSubText && <Text style={{...styles.label, ...props.labelSubTextStyle}}>{props.labelSubText}</Text>}
           </Animated.View>
 
           <View style={styles.buttonContainer}>

@@ -4,6 +4,7 @@ import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from
 import GroceryItemAdd from "./components/GroceryItemAdd";
 import GroceryItemEdit from './components/GroceryItemEdit';
 import SwipableListItem from './components/SwipableListItem';
+import GlobalStyles from './styles/GlobalStyles';
 
 export default function App() {
   const salesTaxRate = 0.09;
@@ -72,34 +73,39 @@ export default function App() {
         onCancel={handleCancel}
         onSubmit={handleEditSubmit} />}
 
-      <TouchableOpacity activeOpacity={0.9} style={{...styles.button, backgroundColor: '#3B0B0B'}} onPress={() => setIsAddMode(true)}>
-        <Text style={{...styles.buttonText, color: '#fff'}}>Add new item</Text>
+      <TouchableOpacity activeOpacity={0.9} style={{...GlobalStyles.button, width: '95%', backgroundColor: GlobalStyles.colors.primary}} onPress={() => setIsAddMode(true)}>
+        <Text style={{...GlobalStyles.buttonText, ...GlobalStyles.text.light}}>Add new item</Text>
       </TouchableOpacity>
 
       <FlatList style={styles.groceryList} data={groceryListItems} renderItem={ ({item}) => 
         (
           <SwipableListItem 
-            labelText={item.name + ' (' + item.quantity + ')'} 
+            labelText={item.name + ' (' + item.quantity + ')'}
             labelSubText={'$' + item.price} 
+            labelContainerStyle={{backgroundColor: GlobalStyles.colors.lightAccent}}
+            labelTextStyle={GlobalStyles.text.medium, GlobalStyles.text.dark}
+            labelSubTextStyle={GlobalStyles.text.medium, GlobalStyles.text.dark}
             actions={[{
                 id: item.id + 'editAction',
                 name: 'Edit',
                 action: () => handleEditItemPress(item),
                 style: {
-                    backgroundColor: '#0B2161'
+                    backgroundColor: GlobalStyles.colors.darkAccent
                 },
+                textStyle: {...GlobalStyles.text.light, ...GlobalStyles.text.small}
             },
             {
                 id: item.id + 'deleteAction',
                 name: 'Delete',
                 action: () => handleDeleteFromList(item),
                 style: {
-                    backgroundColor: '#8A0808',
-                }
+                    backgroundColor: GlobalStyles.colors.danger,
+                },
+                textStyle: {...GlobalStyles.text.light, ...GlobalStyles.text.small}
             }]}/>
         )} />
 
-      <View style={styles.summaryContainer}>
+      <View style={{...styles.summaryContainer, backgroundColor: GlobalStyles.colors.primary}}>
         <View style={styles.summaryRow}>
           <Text style={styles.subTotal}>Sub-total: </Text>
           <Text style={styles.subTotal}>${roundMoney(subTotal)}</Text>
@@ -124,7 +130,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eee',
+    backgroundColor: GlobalStyles.colors.lightShade,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 25
@@ -160,7 +166,6 @@ const styles = StyleSheet.create({
   summaryContainer: {
     padding: 20,
     width: '100%',
-    backgroundColor: '#3B0B0B'
   },
   summaryRow: {
     flexDirection: 'row',

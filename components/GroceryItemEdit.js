@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Keyboard, Text, StyleSheet, TextInput, View, Modal, TouchableOpacity } from 'react-native';
+import GlobalStyles from '../styles/GlobalStyles';
 
 const GroceryItemEdit = props => {
     const [id, setId] = useState(props.groceryItem.id);
@@ -33,31 +34,31 @@ const GroceryItemEdit = props => {
         <Modal visible={props.visible || false} animationType={'slide'}>
             <View style={styles.container}>
                 <TextInput 
-                style={styles.textInput} 
+                style={{...styles.textInput, ...GlobalStyles.text.large}} 
                 value={name} 
                 placeholder="Item Name"
                 onChangeText={(text) => setName(text)} />
 
                 <TextInput 
-                style={styles.textInput} 
+                style={{...styles.textInput, ...GlobalStyles.text.large}} 
                 value={price.toString()} 
                 placeholder="Item Price"
                 keyboardType={'decimal-pad'}
                 onChangeText={(text) => setPrice(text)} />
 
                 <TextInput 
-                style={styles.textInput} 
+                style={{...styles.textInput, ...GlobalStyles.text.large}} 
                 value={quantity.toString()} 
                 placeholder="Quantity"
                 keyboardType={'numeric'}
                 onChangeText={(text) => setQuantity(text)} />
 
-                <TouchableOpacity activeOpacity={0.9} style={{...styles.button, backgroundColor: '#3B0B0B'}} onPress={handleSubmitPress}>
-                    <Text style={{...styles.buttonText, color: '#fff'}}>Save item</Text>
+                <TouchableOpacity activeOpacity={0.9} style={{...GlobalStyles.button, backgroundColor: GlobalStyles.colors.primary}} onPress={handleSubmitPress}>
+                    <Text style={{...GlobalStyles.buttonText, ...GlobalStyles.text.light}}>Save item</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.9} style={{...styles.button, backgroundColor: '#BDBDBD'}} onPress={handleCancelPress}>
-                    <Text style={{...styles.buttonText, color: '#1C1C1C'}}>Cancel</Text>
+                <TouchableOpacity activeOpacity={0.9} style={{...GlobalStyles.button, backgroundColor: GlobalStyles.colors.lightAccent}} onPress={handleCancelPress}>
+                    <Text style={{...GlobalStyles.buttonText, ...GlobalStyles.text.dark}}>Cancel</Text>
                 </TouchableOpacity>
             </View>
         </Modal>
@@ -81,24 +82,8 @@ const styles = StyleSheet.create({
         width: '80%',
         borderBottomColor: 'gray',
         borderBottomWidth: 1,
-        fontSize: 28,
         marginVertical: 15,
     },
-    button: {
-        width: '80%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 10,
-        marginVertical: 5,
-        borderWidth: 1,
-        borderRadius: 5,
-        shadowColor: '#1C1C1C',
-        shadowOpacity: 0.7,
-        elevation: 20,
-    },
-    buttonText: {
-        fontSize: 28,
-    }
 });
 
 export default GroceryItemEdit;
