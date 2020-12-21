@@ -1,54 +1,78 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, Button, PanResponder, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const SwipableListItem = props => {
-    //TODO: get this from props
-    
+    //Reference item to store the most current animation state
+    const listItemAnimation = useRef(new Animated.Value(0)).current;
+    //Grid values for the current item's position state
+    const pan = useRef(new Animated.ValueXY()).current;
 
     const defaultButtonWidth = 75;
+    const animationSpeed = 300;
 
-    const pan = useRef(new Animated.ValueXY()).current;
+    //Calculates the total number of actions supplied in props
+    const numActions = props.actions !== undefined ? props.actions.length : 0;
+
+    //This value is the total width of all buttons. It it used to determine how far to slide
+    //the animation state for showing/hiding the buttons
+    const offset = defaultButtonWidth * numActions;
+
+    //Responds to the current gesture state by starting animations for left/right swipes
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onPanResponderMove: (event, gestureState) => {
-          pan.x.setValue(gestureState.dx);
-        },
-        onPanResponderRelease: (event, gestureState) => {
-          const numActions = props.actions !== undefined ? props.actions.length : 0;
-          const offset = defaultButtonWidth * numActions;
-          if(gestureState.dx > -offset){
-            pan.x.setValue(0);
+          //swipe left
+          if(gestureState.dx < 0){
+            Animated.timing(listItemAnimation, {
+              toValue: -offset,
+              duration: animationSpeed,
+              useNativeDriver: true
+            }).start();
           }
-          else {
-             pan.x.setValue(-offset);
+
+          //swipe right
+          if(gestureState.dx >= 0){
+            Animated.timing(listItemAnimation, {
+              toValue: 0,
+              duration: animationSpeed,
+              useNativeDriver: true
+            }).start();
           }
         }
       });
 
+    //Default handler for button press.
     const handleButtonPress = (item) => {
         pan.x.setValue(0);
         item.action(item);
     };
 
+    //Listens to the animation state and adjusts the list item position accordingly.
+    useEffect(()=> {
+      listItemAnimation.addListener((animation) => {
+        pan.x.setValue(animation.value);
+      });
+    }, []);
+
     return (
-        <View style={styles.container}>
-            <Animated.View {...panResponder.panHandlers} style={[pan.getLayout(), styles.labelContainer]}>
-                
-                    <Text style={styles.label}>{props.labelText}</Text>
-                    {props.labelSubText && <Text style={styles.label}>{props.labelSubText}</Text>}
-                
-            </Animated.View>
-            <View style={styles.buttonContainer}>
-                {props.actions && props.actions.map(item => {
-                    return (
-                        <TouchableOpacity key={item.id} style={{...item.style, ...styles.button}} onPress={() => handleButtonPress(item)}>
-                            <Text style={{...styles.buttonText, ...item.textStyle}}>{item.name}</Text>
-                        </TouchableOpacity>
-                    );
-                })}
-            </View>
-        </View>
-        
+      <View style={styles.container}>
+          <Animated.View {...panResponder.panHandlers} style={[pan.getLayout(), styles.labelContainer]}>
+              
+                  <Text style={styles.label}>{props.labelText}</Text>
+                  {props.labelSubText && <Text style={styles.label}>{props.labelSubText}</Text>}
+              
+          </Animated.View>
+
+          <View style={styles.buttonContainer}>
+              {props.actions && props.actions.map(item => {
+                  return (
+                      <TouchableOpacity key={item.id} style={{...item.style, ...styles.button}} onPress={() => handleButtonPress(item)}>
+                          <Text style={{...styles.buttonText, ...item.textStyle}}>{item.name}</Text>
+                      </TouchableOpacity>
+                  );
+              })}
+          </View>
+      </View>
     );
 }
 

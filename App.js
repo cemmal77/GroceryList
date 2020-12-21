@@ -6,7 +6,26 @@ import GroceryListItemEditor from './components/GroceryListItemEditor';
 import SwipableListItem from './components/SwipableListItem';
 
 export default function App() {
-  const [groceryListItems, setGroceryListItems] = useState([]);
+  const [groceryListItems, setGroceryListItems] = useState([
+    {
+      id: 'randomID1',
+      name: 'Bananas',
+      price: 2.99,
+      quantity: 1
+    },
+    {
+      id: 'randomID2',
+      name: 'Oranges',
+      price: 0.99,
+      quantity: 1
+    },
+    {
+      id: 'randomID3',
+      name: 'Ground Beef',
+      price: 5.99,
+      quantity: 1
+    }
+  ]);
   const pan = useRef(new Animated.ValueXY()).current;
 
   const handleAddToList = (newGroceryListItem) => {
