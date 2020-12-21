@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import GroceryListItemEditor from './components/GroceryListItemEditor';
 import SwipableListItem from './components/SwipableListItem';
 
@@ -28,10 +28,13 @@ export default function App() {
     }
   ]);
 
+  const [isAddMode, setIsAddMode] = useState(false);
+
   const handleAddToList = (groceryListItem) => {
     const nextId = 'listItem' + groceryListItem.name + Math.random().toString();
     groceryListItem.id = nextId.toString();
     setGroceryListItems([...groceryListItems, groceryListItem]);
+    setIsAddMode(false);
   }
 
   const handleDeleteFromList = (groceryListItem) => {
@@ -57,7 +60,11 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GroceryListItemEditor listItem={editItem} onAddToList={handleAddToList}/>
+      <GroceryListItemEditor visible={isAddMode} onCancel={() => setIsAddMode(false)} listItem={editItem} onAddToList={handleAddToList}/>
+
+      <TouchableOpacity activeOpacity={0.9} style={{...styles.button, backgroundColor: '#0B3861'}} onPress={() => setIsAddMode(true)}>
+        <Text style={{...styles.buttonText, color: '#fff'}}>Add new item</Text>
+      </TouchableOpacity>
 
       <FlatList style={styles.groceryList} data={groceryListItems} renderItem={ ({item}) => 
         (
@@ -89,7 +96,7 @@ export default function App() {
         </View>
 
         <View style={styles.summaryRow}>
-          <Text style={styles.subTotal}>Tax: </Text>
+          <Text style={styles.subTotal}>Tax ({salesTaxRate * 100}%): </Text>
           <Text style={styles.subTotal}>${roundMoney(totalTax)}</Text>
         </View>
 
@@ -111,6 +118,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 25
+  },
+  button: {
+    width: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    shadowColor: '#1C1C1C',
+    shadowOpacity: 0.7,
+    elevation: 20,
+  },
+  buttonText: {
+    fontSize: 28,
   },
   groceryList: {
     flex: 1,
