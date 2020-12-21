@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useRef } from 'react';
-import { Animated, Dimensions, PanResponder, FlatList, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import GroceryListItem from './components/GroceryListItem';
+import React, { useState } from 'react';
+import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
 import GroceryListItemEditor from './components/GroceryListItemEditor';
 import SwipableListItem from './components/SwipableListItem';
 
@@ -26,33 +25,17 @@ export default function App() {
       quantity: 1
     }
   ]);
-  const pan = useRef(new Animated.ValueXY()).current;
 
-  const handleAddToList = (newGroceryListItem) => {
-      const nextId = 'listItem' + newGroceryListItem.name + Math.random().toString();
-      console.log('next id: ', nextId);
-      newGroceryListItem.id = nextId.toString();
-      setGroceryListItems([...groceryListItems, newGroceryListItem]);
+  const handleAddToList = (groceryListItem) => {
+    const nextId = 'listItem' + groceryListItem.name + Math.random().toString();
+    groceryListItem.id = nextId.toString();
+    setGroceryListItems([...groceryListItems, groceryListItem]);
   }
 
-  const actions = [
-    {
-        id: 'action1',
-        name: 'Edit',
-        action: (item) => console.log('Edit: ', item),
-        style: {
-            backgroundColor: '#0B2161'
-        },
-    },
-    {
-        id: 'action2',
-        name: 'Delete',
-        action: (item) => console.log('Delete: ', item),
-        style: {
-            backgroundColor: '#8A0808',
-        }
-    }
-];
+  const handleDeleteFromList = (groceryListItem) => {
+    const newGroceryList = groceryListItems.filter(k => groceryListItem.id !== k.id);
+    setGroceryListItems(newGroceryList);
+  }
 
   const editItem = null;
   
@@ -62,13 +45,26 @@ export default function App() {
 
       <FlatList style={styles.groceryList} data={groceryListItems} renderItem={ ({item}) => 
         (
-          // <GroceryListItem listItem={item}/>
-          <SwipableListItem labelText={item.name + ' (' + item.quantity + ')'} labelSubText={'$' + item.price} actions={actions}/>
+          <SwipableListItem 
+            labelText={item.name + ' (' + item.quantity + ')'} 
+            labelSubText={'$' + item.price} 
+            actions={[{
+                id: item.id + 'editAction',
+                name: 'Edit',
+                action: (item) => console.log('Edit: ', item),
+                style: {
+                    backgroundColor: '#0B2161'
+                },
+            },
+            {
+                id: item.id + 'deleteAction',
+                name: 'Delete',
+                action: () => handleDeleteFromList(item),
+                style: {
+                    backgroundColor: '#8A0808',
+                }
+            }]}/>
         )} />
-
-      {/* <SwipableListItem labelText="Coconuts (2)" labelSubText="$13.99" actions={actions}/>
-      <SwipableListItem actions={actions}/>
-      <SwipableListItem actions={actions}/> */}
 
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -80,7 +76,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#eee',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingVertical: 25
   },
   groceryList: {
     flex: 1,
