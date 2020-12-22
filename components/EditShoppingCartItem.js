@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Keyboard, Text, StyleSheet, TextInput, View, Modal, TouchableOpacity } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 
-const GroceryItemEdit = props => {
-    const [id, setId] = useState(props.groceryItem.id);
-    const [name, setName] = useState(props.groceryItem.name);
-    const [price, setPrice] = useState(props.groceryItem.price);
-    const [quantity, setQuantity] = useState(props.groceryItem.quantity);
+const EditShoppingCartItem = props => {
+    const [id, setId] = useState(props.cartItem.id);
+    const [name, setName] = useState(props.cartItem.name);
+    const [price, setPrice] = useState(props.cartItem.price);
+    const [quantity, setQuantity] = useState(props.cartItem.quantity);
 
     const handleCancelPress = () => {
         props.onCancel();
@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default GroceryItemEdit;
+export default EditShoppingCartItem;

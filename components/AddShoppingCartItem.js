@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Keyboard, Text, StyleSheet, TextInput, View, Modal, TouchableOpacity } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 
-const GoceryItemAdd = props => {
+const AddShoppingCartItem = props => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(null);
     const [quantity, setQuantity] = useState(null);
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default GoceryItemAdd;
+export default AddShoppingCartItem;

@@ -1,60 +1,61 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import GroceryItemAdd from "./components/GroceryItemAdd";
-import GroceryItemEdit from './components/GroceryItemEdit';
+import AddShoppingCartItem from "./components/AddShoppingCartItem";
+import EditShoppingCartItem from './components/EditShoppingCartItem';
 import SwipableListItem from './components/SwipableListItem';
+import TitleBar from './components/TitleBar';
 import GlobalStyles from './styles/GlobalStyles';
 
+
 export default function App() {
-  const salesTaxRate = 0.09;
+  const [shoppingCartItems, setShoppingCartItems] = useState([]);
 
-  const [groceryListItems, setGroceryListItems] = useState([]);
+  const [isAddCartItemMode, setIsAddCartItemMode] = useState(false);
+  const [isEditCartItemMode, setIsEditCartItemMode] = useState(false);
+  const [isEditSettingsMode, setIsEditSettingsMode] = useState(false);
+  const [focusedCartItem, setFocusedCartItem] = useState(null);
+  const [salesTaxRate, setSalesTaxRate] = useState(0.10);
 
-  const [isAddMode, setIsAddMode] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [focusedGroceryItem, setFocusedGroceryItem] = useState(null);
-
-  const handleEditItemPress = (groceryItem) => {
-    setFocusedGroceryItem(groceryItem);
-    setIsEditMode(true);
+  const handleEditItemPress = (cartItem) => {
+    setFocusedCartItem(cartItem);
+    setIsEditCartItemMode(true);
   }
 
-  const handleAddSubmit = (groceryItem) => {
-    const nextId = 'listItem' + groceryItem.name + Math.random().toString();
-    groceryItem.id = nextId.toString();
-    setGroceryListItems([...groceryListItems, groceryItem]);
-    setIsAddMode(false);
+  const handleAddSubmit = (cartItem) => {
+    const nextId = 'cartItem' + cartItem.name + Math.random().toString();
+    cartItem.id = nextId.toString();
+    setShoppingCartItems([...shoppingCartItems, cartItem]);
+    setIsAddCartItemMode(false);
   }
 
-  const handleEditSubmit = (groceryItem) => {
-    console.log(groceryItem);
-    const index = groceryListItems.map(k => k.id).indexOf(groceryItem.id);
-    const newList = [...groceryListItems];
-    newList[index] = groceryItem;
-    setGroceryListItems(newList);
-    setIsEditMode(false);
-    setFocusedGroceryItem(null);
+  const handleEditSubmit = (cartItem) => {
+    const index = shoppingCartItems.map(k => k.id).indexOf(cartItem.id);
+    const newList = [...shoppingCartItems];
+    newList[index] = cartItem;
+    setShoppingCartItems(newList);
+    setIsEditCartItemMode(false);
+    setFocusedCartItem(null);
   }
 
   const handleCancel = () => {
-    setIsAddMode(false);
-    setIsEditMode(false);
-    setFocusedGroceryItem(null);
+    setIsAddCartItemMode(false);
+    setIsEditCartItemMode(false);
+    setFocusedCartItem(null);
   }
 
-  const handleDeleteFromList = (groceryItem) => {
-    const newGroceryList = groceryListItems.filter(k => groceryItem.id !== k.id);
-    setGroceryListItems(newGroceryList);
+  const handleDeleteFromList = (cartItem) => {
+    const newShoppingCart = shoppingCartItems.filter(k => cartItem.id !== k.id);
+    setShoppingCartItems(newShoppingCart);
   }
 
   const roundMoney = money => {
     return (Math.round(money * 100) / 100).toFixed(2);
   }
   
-  const groceryListItemTotals = groceryListItems.map(item => item.price * item.quantity);
-  let subTotal = groceryListItemTotals.length > 0 
-        ? groceryListItemTotals.reduce((a,b) => a + b) 
+  const shoppingCartTotals = shoppingCartItems.map(item => item.price * item.quantity);
+  let subTotal = shoppingCartTotals.length > 0 
+        ? shoppingCartTotals.reduce((a,b) => a + b) 
         : 0;
   const totalTax = subTotal * salesTaxRate;
   const total = subTotal + totalTax;
@@ -62,22 +63,20 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GroceryItemAdd 
-        visible={isAddMode}
+      <TitleBar onButton1Press={() => setIsAddCartItemMode(true)} onButton2Press={() => console.log('button 2 press')}/>
+
+      <AddShoppingCartItem 
+        visible={isAddCartItemMode}
         onCancel={handleCancel}
         onSubmit={handleAddSubmit} />
 
-      {focusedGroceryItem && <GroceryItemEdit 
-        visible={isEditMode}
-        groceryItem={focusedGroceryItem}
+      {focusedCartItem && <EditShoppingCartItem 
+        visible={isEditCartItemMode}
+        cartItem={focusedCartItem}
         onCancel={handleCancel}
         onSubmit={handleEditSubmit} />}
 
-      <TouchableOpacity activeOpacity={0.9} style={{...GlobalStyles.button, width: '95%', backgroundColor: GlobalStyles.colors.primary}} onPress={() => setIsAddMode(true)}>
-        <Text style={{...GlobalStyles.buttonText, ...GlobalStyles.text.light}}>Add new item</Text>
-      </TouchableOpacity>
-
-      <FlatList style={styles.groceryList} data={groceryListItems} renderItem={ ({item}) => 
+      <FlatList style={styles.shoppingCart} data={shoppingCartItems} renderItem={ ({item}) => 
         (
           <SwipableListItem 
             labelText={item.name + ' (' + item.quantity + ')'}
@@ -135,26 +134,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 25
   },
-  button: {
-    width: '80%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    marginVertical: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    shadowColor: '#1C1C1C',
-    shadowOpacity: 0.7,
-    elevation: 20,
-  },
-  buttonText: {
-    fontSize: 28,
-  },
-  groceryList: {
+  shoppingCart: {
     flex: 1,
     paddingBottom: 50
   },
-  groceryListItem: {
+  shoppingCartItem: {
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,

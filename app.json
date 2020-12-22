@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "grocery-list",
-    "slug": "grocery-list",
+    "name": "shopping-cart",
+    "slug": "shopping-cart",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
