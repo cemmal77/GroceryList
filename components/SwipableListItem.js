@@ -65,7 +65,8 @@ const SwipableListItem = props => {
               {props.actions && props.actions.map(item => {
                   return (
                       <TouchableOpacity key={item.id} style={{...item.style, ...styles.button}} onPress={() => handleButtonPress(item)}>
-                          <Text style={{...styles.buttonText, ...item.textStyle}}>{item.name}</Text>
+                          {item.name && <Text style={{...styles.buttonText, ...item.textStyle}}>{item.name}</Text>}
+                          {item.icon}
                       </TouchableOpacity>
                   );
               })}
@@ -113,8 +114,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
       buttonText: {
-        color: '#FFFFFF', 
-        fontWeight: 'bold'
+        color: '#FFFFFF'
       }
 });
 

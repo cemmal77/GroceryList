@@ -10,11 +10,11 @@ const TitleBar = props => {
             
             <View style={styles.titleBarButtonContainer}>
             <TouchableOpacity activeOpacity={0.9} onPress={props.onButton1Press}>
-                <Ionicons name="ios-add-circle" size={styles.titleText.fontSize + 4} color={GlobalStyles.colors.primary} />
+                <Ionicons name="ios-add-circle" size={GlobalStyles.icon.large.size} color={GlobalStyles.colors.primary} />
             </TouchableOpacity>
 
             <TouchableOpacity activeOpacity={0.9} onPress={props.onButton2Press}>
-                <Ionicons name="ios-settings" size={styles.titleText.fontSize + 4} color={GlobalStyles.colors.darkAccent} />
+                <Ionicons name="ios-settings" size={GlobalStyles.icon.large.size} color={GlobalStyles.colors.darkAccent} />
             </TouchableOpacity>
             </View>
         </View>
@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 10
+        padding: 10,
+        marginVertical: 10
       },
       titleText: {
         fontSize: 38

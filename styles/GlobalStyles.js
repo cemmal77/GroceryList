@@ -16,13 +16,21 @@ const GlobalStyles = {
     },
     colors: {
         primary: '#2c2c50',
-        lightAccent: '#d0cfd1',
-        darkAccent: '#59585a',
-        danger: '#8A0808',
+        lightAccent: '#dbdadc',
+        darkAccent: '#6e6c70',
+        danger: '#c80000',//'#8A0808',
+    },
+    icon: {
+        medium: {
+            size: 32
+        },
+        large:  {
+            size: 42
+        }
     },
     text: {
         dark: {
-            color: '#1C1C1C'
+            color: '#262626'
         },
         light: {
             color: '#FFFFFF'

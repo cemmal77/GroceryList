@@ -1,3 +1,4 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -100,7 +101,7 @@ export default function App() {
             labelSubTextStyle={GlobalStyles.text.medium, GlobalStyles.text.dark}
             actions={[{
                 id: item.id + 'editAction',
-                name: 'Edit',
+                icon: <MaterialIcons name="edit" size={GlobalStyles.icon.medium.size} color={GlobalStyles.text.light.color} />,
                 action: () => handleEditItemPress(item),
                 style: {
                     backgroundColor: GlobalStyles.colors.darkAccent
@@ -109,7 +110,8 @@ export default function App() {
             },
             {
                 id: item.id + 'deleteAction',
-                name: 'Delete',
+                //name: 'Delete',
+                icon: <MaterialIcons name="delete" size={GlobalStyles.icon.medium.size} color={GlobalStyles.text.light.color} />,
                 action: () => handleDeleteFromList(item),
                 style: {
                     backgroundColor: GlobalStyles.colors.danger,
