@@ -72,7 +72,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TitleBar onButton1Press={() => setIsAddCartItemMode(true)} onButton2Press={() => setIsEditSettingsMode(true)}/>
+      <TitleBar onButton1Press={() => setIsAddCartItemMode(true)} onButton2Press={() => setIsEditSettingsMode(true)} />
 
       <EditSettings 
         salesTaxRate={salesTaxRate} 
