@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AddShoppingCartItem from "./components/AddShoppingCartItem";
+import EditSettings from './components/EditSettings';
 import EditShoppingCartItem from './components/EditShoppingCartItem';
 import SwipableListItem from './components/SwipableListItem';
 import TitleBar from './components/TitleBar';
@@ -38,9 +39,16 @@ export default function App() {
     setFocusedCartItem(null);
   }
 
+  const handleSetingsSubmit = (salesTaxRate) => {
+    console.log(salesTaxRate);
+    setSalesTaxRate(salesTaxRate);
+    setIsEditSettingsMode(false);
+  }
+
   const handleCancel = () => {
     setIsAddCartItemMode(false);
     setIsEditCartItemMode(false);
+    setIsEditSettingsMode(false);
     setFocusedCartItem(null);
   }
 
@@ -63,7 +71,13 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TitleBar onButton1Press={() => setIsAddCartItemMode(true)} onButton2Press={() => console.log('button 2 press')}/>
+      <TitleBar onButton1Press={() => setIsAddCartItemMode(true)} onButton2Press={() => setIsEditSettingsMode(true)}/>
+
+      <EditSettings 
+        salesTaxRate={salesTaxRate} 
+        visible={isEditSettingsMode}
+        onCancel={handleCancel}
+        onSubmit={handleSetingsSubmit} /> 
 
       <AddShoppingCartItem 
         visible={isAddCartItemMode}
