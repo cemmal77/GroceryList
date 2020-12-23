@@ -33,34 +33,44 @@ const EditShoppingCartItem = props => {
     return (
         <Modal visible={props.visible || false} animationType={'slide'}>
             <View style={styles.container}>
-                <TextInput 
-                style={{...styles.textInput, ...GlobalStyles.text.large}} 
-                value={name} 
-                placeholder="Item Name"
-                onChangeText={(text) => setName(text)} />
+                <Text style={styles.titleText}>Edit Item</Text>
 
-                <TextInput 
-                style={{...styles.textInput, ...GlobalStyles.text.large}} 
-                value={price.toString()} 
-                placeholder="Item Price"
-                keyboardType={'decimal-pad'}
-                onChangeText={(text) => setPrice(text)} />
+                <View style={styles.form}>
+                    <TextInput 
+                        style={{...styles.textInput, ...GlobalStyles.text.large}} 
+                        value={name} 
+                        placeholder="Item Name"
+                        onChangeText={(text) => setName(text)} />
 
-                <TextInput 
-                style={{...styles.textInput, ...GlobalStyles.text.large}} 
-                value={quantity.toString()} 
-                placeholder="Quantity"
-                keyboardType={'numeric'}
-                onChangeText={(text) => setQuantity(text)} />
+                    <TextInput 
+                        style={{...styles.textInput, ...GlobalStyles.text.large}} 
+                        value={price.toString()} 
+                        placeholder="Item Price"
+                        keyboardType={'decimal-pad'}
+                        onChangeText={(text) => setPrice(text)} />
 
-                <TouchableOpacity activeOpacity={0.9} style={{...GlobalStyles.button, backgroundColor: GlobalStyles.colors.primary}} onPress={handleSubmitPress}>
-                    <Text style={{...GlobalStyles.buttonText, ...GlobalStyles.text.light}}>Save item</Text>
-                </TouchableOpacity>
+                    <TextInput 
+                        style={{...styles.textInput, ...GlobalStyles.text.large}} 
+                        value={quantity.toString()} 
+                        placeholder="Quantity"
+                        keyboardType={'numeric'}
+                        onChangeText={(text) => setQuantity(text)} />
 
-                <TouchableOpacity activeOpacity={0.9} style={{...GlobalStyles.button, backgroundColor: GlobalStyles.colors.lightAccent}} onPress={handleCancelPress}>
-                    <Text style={{...GlobalStyles.buttonText, ...GlobalStyles.text.dark}}>Cancel</Text>
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity 
+                        activeOpacity={0.9} 
+                        style={{...GlobalStyles.button, backgroundColor: GlobalStyles.colors.primary}} 
+                        onPress={handleSubmitPress}>
+                            <Text style={{...GlobalStyles.buttonText, ...GlobalStyles.text.light}}>Save item</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        activeOpacity={0.9} 
+                        style={{...GlobalStyles.button, backgroundColor: GlobalStyles.colors.lightAccent}} 
+                        onPress={handleCancelPress}>
+                            <Text style={{...GlobalStyles.buttonText, ...GlobalStyles.text.dark}}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>    
         </Modal>
     );
 }
@@ -68,16 +78,23 @@ const EditShoppingCartItem = props => {
 const styles = StyleSheet.create({
     container: {
         width: '90%',
-        paddingHorizontal: 10,
-        paddingVertical: 25,
-        justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
+        marginVertical: '25%'
+    },
+    form: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        paddingVertical: 25,
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 5,
-        marginVertical: '25%'
     },
+    titleText: {
+        fontSize: 38,
+      },
     textInput: {
         width: '80%',
         borderBottomColor: 'gray',
